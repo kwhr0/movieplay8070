@@ -8,7 +8,7 @@
 
 typedef struct {
 	u32 fat, rde, len, ofs;
-	u16 cluster, clustermask, clustershift;
+	u16 cluster, clustermask;
 } File;
 
 static File sFile;
@@ -59,9 +59,6 @@ void FileInit(void) {
 	MediaSetAddress(w + 13);
 	t = MediaRead();
 	f->clustermask = (t << 9) - 1;
-	for (i = 9; t >>= 1; i++)
-		;
-	f->clustershift = i;
 	f->fat = w + 512;
 	MediaRead4();
 	MediaRead4();
@@ -72,8 +69,7 @@ static void FileSetCluster(u16 c) {
 	if (c < LIM_USERCLUSTER) {
 		File *f = &sFile;
 		u32 adr = f->rde;
-		if (c) adr += RDE_LEN + ((u32)(c - 2) << f->clustershift);
-		//if (c) adr += RDE_LEN + (u32)(c - 2) * (f->clustermask + 1);
+		if (c) adr += RDE_LEN + (u32)(c - 2) * (f->clustermask + 1);
 		MediaSetAddress(adr);
 	}
 }

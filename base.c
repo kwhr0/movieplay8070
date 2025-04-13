@@ -15,7 +15,7 @@ void putv(u16 v, s16 n, u16 m) {
 	s16 i = 0;
 	u16 f, r = 2 + (m & 0xf), a = 7 + (m & 0x20), p = 0x20 + (m & 0x10);
 	if (f = m & 0x80 && v & 0x8000) v = -v;
-	do { // avoid fcc bug (not use '%')
+	do {
 		u16 d = v / r, t = v - d * r + '0';
 		if (t > '9') t += a;
 		c[i++] = t;
